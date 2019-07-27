@@ -8,7 +8,7 @@
 
         <variable
                 name="viewmodel"
-                type="com.tanovai.revolut.view.rates.RatesViewModel" />
+                type="com.tanovai.currencyconverter.view.rates.RatesViewModel" />
     </data>
 
 

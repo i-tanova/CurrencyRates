@@ -1,4 +1,4 @@
-import com.tanovai.revolut.model.RatesResponse
+import com.tanovai.currencyconverter.model.RatesResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -1,4 +1,4 @@
-package com.tanovai.revolut.model
+package com.tanovai.currencyconverter.model
 
 data class RatesResponse(
     val base: String,

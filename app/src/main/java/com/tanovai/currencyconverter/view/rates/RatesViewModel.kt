@@ -1,13 +1,12 @@
-package com.tanovai.revolut.view.rates
+package com.tanovai.currencyconverter.view.rates
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.tanovai.mvvm.model.RepoRepository
-import com.tanovai.revolut.architecture.BaseViewModel
-import com.tanovai.revolut.model.Rate
-import com.tanovai.revolut.model.RatesResponse
-import com.tanovai.revolut.model.data.RateListItem
+import com.tanovai.currencyconverter.architecture.BaseViewModel
+import com.tanovai.currencyconverter.model.Rate
+import com.tanovai.currencyconverter.model.RatesResponse
+import com.tanovai.currencyconverter.model.data.RateListItem
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

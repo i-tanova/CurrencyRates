@@ -5,7 +5,7 @@
         <import type="android.view.View" />
         <variable
                 name="itemData"
-                type="com.tanovai.revolut.model.data.RateListItem" />
+                type="com.tanovai.currencyconverter.model.data.RateListItem" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout

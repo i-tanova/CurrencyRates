@@ -1,4 +1,4 @@
-package com.tanovai.revolut.model.data
+package com.tanovai.currencyconverter.model.data
 
 data class RateListItem(
         val abb: String,

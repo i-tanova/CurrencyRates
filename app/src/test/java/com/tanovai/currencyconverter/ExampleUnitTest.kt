@@ -1,4 +1,4 @@
-package com.tanovai.revolut
+package com.tanovai.currencyconverter
 
 import org.junit.Test
 

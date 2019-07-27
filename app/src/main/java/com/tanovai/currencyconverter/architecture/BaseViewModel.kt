@@ -1,4 +1,4 @@
-package com.tanovai.revolut.architecture
+package com.tanovai.currencyconverter.architecture
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

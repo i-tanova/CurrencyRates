@@ -1,4 +1,4 @@
-package com.tanovai.revolut
+package com.tanovai.currencyconverter
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4

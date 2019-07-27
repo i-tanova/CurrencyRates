@@ -1,4 +1,4 @@
-package com.tanovai.revolut.view.rates
+package com.tanovai.currencyconverter.view.rates
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,8 +7,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tanovai.revolut.R
-import com.tanovai.revolut.databinding.ActivityRatesBinding
+import com.tanovai.currencyconverter.R
+import com.tanovai.currencyconverter.databinding.ActivityRatesBinding
 import kotlinx.android.synthetic.main.activity_rates.*
 
 class RatesActivity : AppCompatActivity() {
