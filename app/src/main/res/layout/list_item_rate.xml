@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View" />
+        <variable
+                name="itemData"
+                type="com.tanovai.revolut.model.data.RateListItem" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_us"
+            android:id="@+id/list_item_rate_currency_flag"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+           tools:text="USD"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_item_rate_abb"
+            app:layout_constraintStart_toEndOf="@+id/list_item_rate_currency_flag"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+           app:layout_constraintEnd_toStartOf="@+id/list_item_rate_input"
+           android:text="@{itemData.abb}"
+            android:layout_marginEnd="8dp"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/list_item_rate_input">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/list_item_rate_input_edit"
+                android:layout_width="wrap_content"
+                android:text="@{@string/generic_text(itemData.rate)}"
+                android:layout_height="wrap_content"
+        />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+            tools:text="US dollar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/list_item_rate_abb"
+            android:id="@+id/list_item_rate_currency_description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="12dp"
+            android:text="@{itemData.name}"
+            app:layout_constraintStart_toStartOf="@+id/list_item_rate_abb"
+            android:layout_marginTop="8dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+
+        <!--//-->

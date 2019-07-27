@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Revolut Rates</string>
+    <string name="rates">Rates</string>
+    <string name="generic_text">%s</string>
+</resources>
