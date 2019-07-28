@@ -26,6 +26,8 @@ class RatesViewModel : BaseViewModel() {
     var fetchRatesDisposable: Disposable? = null
     var timerDisposable: Disposable? = null
     var isPused = AtomicBoolean(true)
+    var isInInputMode = AtomicBoolean(false)
+
 
     val TAG = RatesViewModel::class.java.name
 
@@ -52,7 +54,7 @@ class RatesViewModel : BaseViewModel() {
                     .subscribeOn(Schedulers.io())
                     .takeWhile(object : Predicate<Any>{
                         override fun test(o: Any): Boolean {
-                            return !isPused.get()
+                            return !isPused.get() && !isInInputMode.get()
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread())
@@ -61,7 +63,7 @@ class RatesViewModel : BaseViewModel() {
     }
 
     private fun whenTimerFinised() {
-       if(!isPused.get()){
+       if(!isPused.get() && !isInInputMode.get()){
            fetchRepoList()
        }
     }
@@ -108,12 +110,26 @@ class RatesViewModel : BaseViewModel() {
 
     fun onResume() {
         isPused.set(false)
-        startFetchTimer()
+        if(!isInInputMode.get()) {
+            startFetchTimer()
+        }
     }
 
     fun onPause() {
         isPused.set(true)
         fetchRatesDisposable?.dispose()
         timerDisposable?.dispose()
+    }
+
+    fun onItemClick(itemData: RateListItem) {
+        isInInputMode.set(true)
+       val items = ratesListLive.value
+        val newItems = mutableListOf<RateListItem>()
+        if(items != null){
+            newItems.addAll(items)
+            newItems.remove(itemData)
+            newItems.add(0, itemData)
+        }
+        ratesListLive.value = newItems
     }
 }

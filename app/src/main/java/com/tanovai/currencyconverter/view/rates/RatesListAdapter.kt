@@ -37,11 +37,8 @@ class RepoListViewHolder constructor(private val dataBinding: ViewDataBinding, p
         dataBinding.setVariable(BR.itemData, itemData)
         dataBinding.executePendingBindings()
 
-//        Picasso.get().load(itemData.owner.avatar_url).into(avatarImage);
-//
-//        itemView.setOnClickListener() {
-//            val bundle = bundleOf("url" to itemData.html_url)
-//            itemView.findNavController().navigate(R.id.action_repoListFragment_to_repoDetailFragment, bundle)
-//        }
+        itemView.setOnClickListener() {
+            repoListViewModel.onItemClick(itemData)
+        }
     }
 }
