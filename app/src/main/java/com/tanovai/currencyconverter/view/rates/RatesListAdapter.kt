@@ -33,8 +33,6 @@ class RatesListAdapter(private val repoListViewModel: RatesViewModel) : Recycler
 class RepoListViewHolder constructor(private val dataBinding: ViewDataBinding, private val repoListViewModel: RatesViewModel)
     : RecyclerView.ViewHolder(dataBinding.root) {
 
-    //val avatarImage = itemView.item_avatar
-
     fun setup(itemData: RateListItem) {
         dataBinding.setVariable(BR.itemData, itemData)
         dataBinding.executePendingBindings()

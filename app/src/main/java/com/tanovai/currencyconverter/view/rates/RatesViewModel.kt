@@ -7,6 +7,7 @@ import com.tanovai.currencyconverter.architecture.BaseViewModel
 import com.tanovai.currencyconverter.model.Rate
 import com.tanovai.currencyconverter.model.RatesResponse
 import com.tanovai.currencyconverter.model.data.RateListItem
+import com.tanovai.currencyconverter.util.CURRENCIES
 import com.tanovai.currencyconverter.util.Constants
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,6 +15,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
+import java.lang.Exception
+import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -63,16 +66,34 @@ class RatesViewModel : BaseViewModel() {
        }
     }
 
-    private fun mapRatesToRateListItems(it: RatesResponse): List<RateListItem> {
-        val rates = mutableListOf<RateListItem>()
+    private fun mapRatesToRateListItems(response: RatesResponse): List<RateListItem> {
+        val ratesListItems = mutableListOf<RateListItem>()
 
-              rates.add(createRateListItem(it.rates))
+        CURRENCIES.forEach {
+            val rateStr = getPropertyValue(response.rates, it.abb)
 
-        return rates
+            try {
+                if (rateStr.isNotEmpty()) {
+                val rateDouble = rateStr.toDouble()
+                    ratesListItems.add(RateListItem(it.abb, it.description, rateDouble, it.drawableRId))
+                }
+            }catch (e: Exception){
+                Log.e(TAG, e.message, e)
+            }
+        }
+        return ratesListItems
     }
 
-    private fun createRateListItem(rate: Rate): RateListItem {
-        return RateListItem("USD", "US Dollar", rate.USD)
+    fun getPropertyValue(obj: Any, propertyName: String): String
+    {
+        var result = ""
+        try {
+            val field = obj.javaClass.getDeclaredField(propertyName)
+            field.isAccessible = true
+            result = field.get(obj)?.toString() ?:""
+        }finally{
+            return result
+        }
     }
 
     override fun onCleared() {

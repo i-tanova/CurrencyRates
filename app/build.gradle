@@ -38,6 +38,10 @@ android {
 }
 
 dependencies {
+
+    //Circular Image View
+    implementation 'com.mikhaellopez:circularimageview:3.2.0'
+
     // Anko
     implementation "org.jetbrains.anko:anko:$rootProject.ankoVersion"
     implementation "org.jetbrains.anko:anko-commons:$rootProject.ankoVersion"

@@ -16,10 +16,23 @@
         android:layout_height="wrap_content">
 
 
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_us"
+    <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--tools:srcCompat="@drawable/ic_us"-->
+            <!--app:srcCompat="@{ContextCompat.getDrawable(context, itemData.drawableRId)}"-->
+            <!--android:id="@+id/list_item_rate_currency_flag"-->
+            <!--android:layout_marginStart="16dp"-->
+            <!--android:layout_marginEnd="16dp"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:layout_marginBottom="16dp"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent"/>-->
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:id="@+id/list_item_rate_currency_flag"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
@@ -27,7 +40,10 @@
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:imageResource="@{itemData.drawableRId}"
+            app:civ_border="false"
+           />
 
     <TextView
            tools:text="USD"
