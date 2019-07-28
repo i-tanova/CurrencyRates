@@ -7,51 +7,58 @@ import com.tanovai.currencyconverter.architecture.BaseViewModel
 import com.tanovai.currencyconverter.model.Rate
 import com.tanovai.currencyconverter.model.RatesResponse
 import com.tanovai.currencyconverter.model.data.RateListItem
+import com.tanovai.currencyconverter.util.Constants
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 class RatesViewModel : BaseViewModel() {
 
     val ratesListLive = MutableLiveData<List<RateListItem>>()
-    val compositeDisposable = CompositeDisposable()
+    var fetchRatesDisposable: Disposable? = null
     var timerDisposable: Disposable? = null
-    var isPused = true
+    var isPused = AtomicBoolean(true)
 
-    val baseEUR = "EUR"
     val TAG = RatesViewModel::class.java.name
 
     fun fetchRepoList() {
-        compositeDisposable.add(RepoRepository.getInstance().getRates(baseEUR)
+        fetchRatesDisposable?.dispose()
+        fetchRatesDisposable = RepoRepository.getInstance().getRates(Constants.baseEUR)
             .map { mapRatesToRateListItems(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ whenRatesFetched(it) } , { Log.e(TAG, it.message, it)}))
+            .subscribe({ whenRatesFetched(it) } , { Log.e(TAG, it.message, it)})
 
     }
 
     private fun whenRatesFetched(it: List<RateListItem>?) {
         ratesListLive.value = it
         dataLoading.value = false
-
-        startFetchTimer()
     }
 
     private fun startFetchTimer() {
         timerDisposable?.dispose()
-        if (!isPused) {
-            timerDisposable = Observable.just(true).delay(1000, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({whenTimerFinised()})
+        if (!isPused.get()) {
+            timerDisposable =
+                Observable.interval(1000, TimeUnit.MILLISECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .takeWhile(object : Predicate<Any>{
+                        override fun test(o: Any): Boolean {
+                            return !isPused.get()
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({whenTimerFinised()})
         }
     }
 
     private fun whenTimerFinised() {
-       if(!isPused){
+       if(!isPused.get()){
            fetchRepoList()
        }
     }
@@ -69,7 +76,7 @@ class RatesViewModel : BaseViewModel() {
     }
 
     override fun onCleared() {
-        compositeDisposable.clear()
+        fetchRatesDisposable?.dispose()
         timerDisposable?.dispose()
         super.onCleared()
     }
@@ -79,12 +86,13 @@ class RatesViewModel : BaseViewModel() {
     }
 
     fun onResume() {
-        isPused = false
-        fetchRepoList()
+        isPused.set(false)
+        startFetchTimer()
     }
 
     fun onPause() {
-        isPused = true
+        isPused.set(true)
+        fetchRatesDisposable?.dispose()
         timerDisposable?.dispose()
     }
 }
