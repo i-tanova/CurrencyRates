@@ -170,7 +170,7 @@ class RatesViewModel : BaseViewModel() {
         setInputMode(true)
         fetchRatesDisposableOnItemClick?.dispose()
         fetchRatesDisposableOnItemClick = RepoRepository.getInstance().getRates(selectedBase)
-            .map { mapRatesToRateListItems(it, selectedRate.rate) }
+            .map { mapRatesToRateListItems(it, selectedRate.quantity) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ whenRatesFetchedChangeBase(it, selectedRate) }, { Log.e(TAG, it.message, it) })
@@ -184,14 +184,14 @@ class RatesViewModel : BaseViewModel() {
         if (ratesListItems != null) {
 
             selectedBase = selectedRate.abb
-            quantityWanted = selectedRate.rate
+            quantityWanted = selectedRate.quantity
             val newItems = mutableListOf<RateListItem>()
             newItems.add(
                 RateListItem(
                     selectedRate.abb,
                     selectedRate.description,
                     selectedRate.rate,
-                    selectedRate.quantityRate,
+                    selectedRate.quantity,
                     selectedRate.drawableRId,
                     true
                 )

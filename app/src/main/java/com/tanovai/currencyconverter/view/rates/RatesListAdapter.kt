@@ -61,7 +61,7 @@ class RepoListViewHolder constructor(
         dataBinding.setVariable(BR.itemData, itemData)
         dataBinding.executePendingBindings()
 
-        if(itemData.quantityRate <= 0){
+        if(itemData.quantity <= 0){
             editText.setText("")
         }
 

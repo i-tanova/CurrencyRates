@@ -63,7 +63,7 @@
                     android:inputType="numberDecimal"
                     android:hint="0"
                     android:textColor="@drawable/selector_black_disabled_edit_text"
-                    android:text="@{@string/generic_text(itemData.quantityRate)}"
+                    android:text="@{@string/generic_text(itemData.quantity)}"
                     android:layout_height="wrap_content"
             />
         </com.google.android.material.textfield.TextInputLayout>
