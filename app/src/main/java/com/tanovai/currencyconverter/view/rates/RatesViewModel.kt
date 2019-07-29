@@ -28,6 +28,7 @@ class RatesViewModel : BaseViewModel() {
     var rateChangedDisposable: Disposable? = null
     var isPused = AtomicBoolean(true)
     var isInInputMode = AtomicBoolean(false)
+
     var selectedBase = Constants.EURO_BASE
     var quantityWanted = 1.0
 
@@ -71,7 +72,7 @@ class RatesViewModel : BaseViewModel() {
 
     private fun startFetchTimer() {
         timerDisposable?.dispose()
-        if (!isPused.get()) {
+        if (!isPused.get() && !isInInputMode.get()) {
             timerDisposable =
                 Observable.interval(1000, TimeUnit.MILLISECONDS)
                     .subscribeOn(Schedulers.io())
@@ -81,11 +82,11 @@ class RatesViewModel : BaseViewModel() {
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ atIntervalTick() })
+                    .subscribe({ atTimerTick() })
         }
     }
 
-    private fun atIntervalTick() {
+    private fun atTimerTick() {
         if (!isPused.get() && !isInInputMode.get()) {
             fetchRatesListFromTimer(selectedBase)
         }
@@ -100,10 +101,20 @@ class RatesViewModel : BaseViewModel() {
             try {
                 if (rateStr.isNotEmpty()) {
                     val rateDouble = rateStr.toDouble()
-                    val quantity = BigDecimal(rateDouble).multiply(BigDecimal(quantityWanted))
-                    val quantityFormatted = quantity.setScale(4, RoundingMode.HALF_UP)
-                    ratesListItems.add(RateListItem(it.abb, it.description, rateDouble, quantityFormatted.toDouble(), it.drawableRId))
-                }
+                    if(rateDouble > 0) {
+                        val quantity = BigDecimal(rateDouble).multiply(BigDecimal(quantityWanted))
+                        val quantityFormatted = quantity.setScale(4, RoundingMode.HALF_UP)
+                        ratesListItems.add(
+                            RateListItem(
+                                it.abb,
+                                it.description,
+                                rateDouble,
+                                quantityFormatted.toDouble(),
+                                it.drawableRId
+                            )
+                        )
+                    }
+                    }
             } catch (e: Exception) {
                 Log.e(TAG, e.message, e)
             }
@@ -148,7 +159,7 @@ class RatesViewModel : BaseViewModel() {
     }
 
     fun onItemClick(selectedRate: RateListItem) {
-        isInInputMode.set(true)
+        setInputMode(true)
         fetchRatesDisposableOnItemClick?.dispose()
         fetchRatesDisposableOnItemClick = RepoRepository.getInstance().getRates(selectedBase)
             .map { mapRatesToRateListItems(it, selectedRate.rate) }
@@ -181,6 +192,13 @@ class RatesViewModel : BaseViewModel() {
             newItems.addAll(1, ratesListItems)
             ratesListLive.value = newItems
         }
+
+        setInputMode(false)
+        startFetchTimer()
+    }
+
+    fun setInputMode(value: Boolean){
+        isInInputMode.set(value)
     }
 
 
