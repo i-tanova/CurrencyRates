@@ -1,11 +1,11 @@
 package com.tanovai.currencyconverter.view.rates
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tanovai.currencyconverter.R
 import com.tanovai.currencyconverter.databinding.ActivityRatesBinding
@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_rates.*
 
 class RatesActivity : AppCompatActivity() {
 
-   private lateinit var adapter: RatesListAdapter//RatesItemsAdapter
+    private lateinit var adapter: RatesListAdapter
     private lateinit var binding: ActivityRatesBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,14 +52,14 @@ class RatesActivity : AppCompatActivity() {
 
 
     private fun setupObservers(viewmodel: RatesViewModel?, lifecycleOwner: LifecycleOwner?) {
-        if(lifecycleOwner != null) {
+        if (lifecycleOwner != null) {
             viewmodel?.ratesListLive?.observe(lifecycleOwner, Observer {
                 adapter.updateRatesListDontChangeFirst(it)
             })
 
             viewmodel?.changeFirstItem?.observe(lifecycleOwner, Observer {
                 val listItems = viewmodel.ratesListLive.value
-                if(listItems != null) {
+                if (listItems != null) {
                     adapter.updateRatesListAll(listItems)
                     rates_rv.smoothScrollToPosition(0)
                 }

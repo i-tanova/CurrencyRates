@@ -1,5 +1,6 @@
 package com.tanovai.mvvm.model
 
+import ApiClient
 import com.tanovai.currencyconverter.model.RatesResponse
 import io.reactivex.Observable
 

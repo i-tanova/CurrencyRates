@@ -1,7 +1,6 @@
 package com.tanovai.currencyconverter.view.rates
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tanovai.currencyconverter.architecture.BaseViewModel
 import com.tanovai.currencyconverter.model.RatesResponse
@@ -58,13 +57,20 @@ class RatesViewModel : BaseViewModel() {
         val newRateItems = mutableListOf<RateListItem>()
         newRateItems.addAll(newRates)
 
-        if(items.isNullOrEmpty() || items[0].abb != selectedBase){
+        if (items.isNullOrEmpty() || items[0].abb != selectedBase) {
             val findDataAboutSelected = CURRENCIES.find { it.abb == selectedBase }
-            if(findDataAboutSelected != null) {
-                val firstRate = RateListItem(findDataAboutSelected.abb, findDataAboutSelected.description, 1.0, quantityWanted, findDataAboutSelected.drawableRId, true)
-                 newRateItems.add(0, firstRate)
+            if (findDataAboutSelected != null) {
+                val firstRate = RateListItem(
+                    findDataAboutSelected.abb,
+                    findDataAboutSelected.description,
+                    1.0,
+                    quantityWanted,
+                    findDataAboutSelected.drawableRId,
+                    true
+                )
+                newRateItems.add(0, firstRate)
             }
-        }else{
+        } else {
             newRateItems.add(0, items[0])
         }
 
@@ -103,7 +109,7 @@ class RatesViewModel : BaseViewModel() {
             try {
                 if (rateStr.isNotEmpty()) {
                     val rateDouble = rateStr.toDouble()
-                    if(rateDouble > 0) {
+                    if (rateDouble > 0) {
                         val quantity = BigDecimal(rateDouble).multiply(BigDecimal(quantityWanted))
                         val quantityFormatted = quantity.setScale(4, RoundingMode.HALF_UP)
                         ratesListItems.add(
@@ -116,7 +122,7 @@ class RatesViewModel : BaseViewModel() {
                             )
                         )
                     }
-                    }
+                }
             } catch (e: Exception) {
                 Log.e(TAG, e.message, e)
             }
@@ -175,7 +181,7 @@ class RatesViewModel : BaseViewModel() {
         selectedRate: RateListItem
     ) {
 
-        if(ratesListItems != null) {
+        if (ratesListItems != null) {
 
             selectedBase = selectedRate.abb
             quantityWanted = selectedRate.rate
@@ -200,7 +206,7 @@ class RatesViewModel : BaseViewModel() {
         startFetchTimer()
     }
 
-    fun setInputMode(value: Boolean){
+    fun setInputMode(value: Boolean) {
         isInInputMode.set(value)
     }
 
@@ -217,7 +223,7 @@ class RatesViewModel : BaseViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ value ->
                 onNewValueEntered(value)
-            }, { t: Throwable? -> Log.e(TAG, "Failed to get search results") })
+            }, { t: Throwable? -> Log.e(TAG, t?.message) })
     }
 
 
@@ -227,7 +233,7 @@ class RatesViewModel : BaseViewModel() {
             val sumToEvaluate = value.toDouble()
             quantityWanted = sumToEvaluate
         } catch (e: Exception) {
-
+           quantityWanted = 0.0
         }
 
         return ""

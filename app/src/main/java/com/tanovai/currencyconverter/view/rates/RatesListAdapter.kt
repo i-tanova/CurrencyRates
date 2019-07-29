@@ -1,18 +1,15 @@
 package com.tanovai.currencyconverter.view.rates
 
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.tanovai.currencyconverter.BR
 import com.tanovai.currencyconverter.R
 import com.tanovai.currencyconverter.model.data.RateListItem
-import kotlinx.android.synthetic.main.list_item_rate.view.*
 
 
 class RatesListAdapter(private val repoListViewModel: RatesViewModel) : RecyclerView.Adapter<RepoListViewHolder>() {
@@ -52,8 +49,11 @@ class RatesListAdapter(private val repoListViewModel: RatesViewModel) : Recycler
     }
 }
 
-class RepoListViewHolder constructor(private val dataBinding: ViewDataBinding, private val repoListViewModel: RatesViewModel, private val textWatcher: TextWatcher)
-    : RecyclerView.ViewHolder(dataBinding.root) {
+class RepoListViewHolder constructor(
+    private val dataBinding: ViewDataBinding,
+    private val repoListViewModel: RatesViewModel,
+    private val textWatcher: TextWatcher
+) : RecyclerView.ViewHolder(dataBinding.root) {
 
     val editText = itemView.findViewById<TextInputEditText>(R.id.list_item_rate_input_edit)
 
@@ -61,15 +61,19 @@ class RepoListViewHolder constructor(private val dataBinding: ViewDataBinding, p
         dataBinding.setVariable(BR.itemData, itemData)
         dataBinding.executePendingBindings()
 
-        if(itemData.isSelected) {
+        if(itemData.quantityRate <= 0){
+            editText.setText("")
+        }
+
+        if (itemData.isSelected) {
             editText.addTextChangedListener(textWatcher)
             editText.isEnabled = true
-        }else {
+        } else {
             editText.removeTextChangedListener(textWatcher)
             editText.isEnabled = false
         }
 
-        itemView.setOnClickListener() {
+        itemView.setOnClickListener {
             repoListViewModel.onItemClick(itemData)
         }
     }
