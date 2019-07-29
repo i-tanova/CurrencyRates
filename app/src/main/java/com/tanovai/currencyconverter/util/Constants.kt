@@ -6,5 +6,5 @@ object Constants {
     val REQUEST_TIMEOUT_DURATION = 10
     val DEBUG = true
 
-    val baseEUR = "EUR"
+    val EURO_BASE = "EUR"
 }

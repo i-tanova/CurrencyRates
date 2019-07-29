@@ -2,94 +2,85 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
         <variable
                 name="itemData"
-                type="com.tanovai.currencyconverter.model.data.RateListItem" />
+                type="com.tanovai.currencyconverter.model.data.RateListItem"/>
     </data>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
 
-    <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--tools:srcCompat="@drawable/ic_us"-->
-            <!--app:srcCompat="@{ContextCompat.getDrawable(context, itemData.drawableRId)}"-->
-            <!--android:id="@+id/list_item_rate_currency_flag"-->
-            <!--android:layout_marginStart="16dp"-->
-            <!--android:layout_marginEnd="16dp"-->
-            <!--android:layout_marginTop="16dp"-->
-            <!--android:layout_marginBottom="16dp"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="parent"/>-->
-
-    <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/list_item_rate_currency_flag"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:imageResource="@{itemData.drawableRId}"
-            app:civ_border="false"
-           />
-
-    <TextView
-           tools:text="USD"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/list_item_rate_abb"
-            app:layout_constraintStart_toEndOf="@+id/list_item_rate_currency_flag"
-            android:layout_marginStart="16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="16dp"
-           app:layout_constraintEnd_toStartOf="@+id/list_item_rate_input"
-           android:text="@{itemData.abb}"
-            android:layout_marginEnd="8dp"/>
-
-
-    <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/list_item_rate_input">
-
-        <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/list_item_rate_input_edit"
-                android:layout_width="wrap_content"
-                android:text="@{@string/generic_text(itemData.rate)}"
-                android:layout_height="wrap_content"
+        <com.mikhaellopez.circularimageview.CircularImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/list_item_rate_currency_flag"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:imageResource="@{itemData.drawableRId}"
+                app:civ_border="false"
         />
-    </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-            tools:text="US dollar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/list_item_rate_abb"
-            android:id="@+id/list_item_rate_currency_description"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="12dp"
-            android:text="@{itemData.name}"
-            app:layout_constraintStart_toStartOf="@+id/list_item_rate_abb"
-            android:layout_marginTop="8dp"/>
+        <TextView
+                tools:text="USD"
+                android:layout_width="0dp"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"
+                android:id="@+id/list_item_rate_abb"
+                app:layout_constraintStart_toEndOf="@+id/list_item_rate_currency_flag"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/colorBlack"
+                app:layout_constraintEnd_toStartOf="@+id/list_item_rate_input"
+                android:text="@{itemData.abb}"
+                android:layout_marginEnd="8dp"/>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/list_item_rate_input">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/list_item_rate_input_edit"
+                    android:layout_width="wrap_content"
+                    android:textColor="@drawable/selector_black_disabled_edit_text"
+                    android:text="@{@string/generic_text(itemData.quantityRate)}"
+                    android:layout_height="wrap_content"
+            />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+                tools:text="US dollar"
+                android:textColor="@color/colorGray_50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@+id/list_item_rate_abb"
+                android:id="@+id/list_item_rate_currency_description"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="12dp"
+                android:text="@{itemData.description}"
+                app:layout_constraintStart_toStartOf="@+id/list_item_rate_abb"
+                android:layout_marginTop="8dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
 

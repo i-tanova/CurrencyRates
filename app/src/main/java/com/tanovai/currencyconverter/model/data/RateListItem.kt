@@ -2,7 +2,9 @@ package com.tanovai.currencyconverter.model.data
 
 data class RateListItem(
         val abb: String,
-        val name: String,
+        val description: String,
         val rate: Double,
-        val drawableRId: Int
+        val quantityRate: Double,
+        val drawableRId: Int,
+        val isSelected:Boolean = false
     )
