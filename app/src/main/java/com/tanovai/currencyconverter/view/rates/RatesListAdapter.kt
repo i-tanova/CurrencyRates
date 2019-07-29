@@ -41,9 +41,14 @@ class RatesListAdapter(private val repoListViewModel: RatesViewModel) : Recycler
         holder.setup(repoList[position])
     }
 
-    fun updateRatesList(repoList: List<RateListItem>) {
+    fun updateRatesListAll(repoList: List<RateListItem>) {
         this.repoList = repoList
         notifyDataSetChanged()
+    }
+
+    fun updateRatesListDontChangeFirst(repoList: List<RateListItem>) {
+        this.repoList = repoList
+        notifyItemRangeChanged(1, repoList.lastIndex)
     }
 }
 

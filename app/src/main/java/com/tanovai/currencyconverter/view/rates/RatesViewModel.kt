@@ -1,6 +1,7 @@
 package com.tanovai.currencyconverter.view.rates
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.tanovai.currencyconverter.architecture.BaseViewModel
 import com.tanovai.currencyconverter.model.RatesResponse
@@ -22,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class RatesViewModel : BaseViewModel() {
 
     val ratesListLive = MutableLiveData<List<RateListItem>>()
+    val changeFirstItem = MutableLiveData<Boolean>()
     var fetchRatesDisposable: Disposable? = null
     var fetchRatesDisposableOnItemClick: Disposable? = null
     var timerDisposable: Disposable? = null
@@ -191,6 +193,7 @@ class RatesViewModel : BaseViewModel() {
 
             newItems.addAll(1, ratesListItems)
             ratesListLive.value = newItems
+            changeFirstItem.value = true
         }
 
         setInputMode(false)

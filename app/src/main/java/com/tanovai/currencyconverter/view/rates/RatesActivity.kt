@@ -50,10 +50,19 @@ class RatesActivity : AppCompatActivity() {
         }
     }
 
+
     private fun setupObservers(viewmodel: RatesViewModel?, lifecycleOwner: LifecycleOwner?) {
         if(lifecycleOwner != null) {
             viewmodel?.ratesListLive?.observe(lifecycleOwner, Observer {
-                adapter.updateRatesList(it)
+                adapter.updateRatesListDontChangeFirst(it)
+            })
+
+            viewmodel?.changeFirstItem?.observe(lifecycleOwner, Observer {
+                val listItems = viewmodel.ratesListLive.value
+                if(listItems != null) {
+                    adapter.updateRatesListAll(listItems)
+                    rates_rv.smoothScrollToPosition(0)
+                }
             })
         }
     }
