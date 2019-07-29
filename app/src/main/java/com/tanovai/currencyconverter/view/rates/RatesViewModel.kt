@@ -225,21 +225,7 @@ class RatesViewModel : BaseViewModel() {
         Log.d(TAG, value)
         try {
             val sumToEvaluate = value.toDouble()
-            //quantityWanted = sumToEvaluate
-//            val rates = ratesListLive.value
-//            val newRates = mutableListOf<RateListItem>()
-//            if (rates != null) {
-//                newRates.addAll(rates.subList(1, rates.lastIndex).map {
-//                    RateListItem(
-//                        it.abb,
-//                        it.description,
-//                        it.rate,
-//                        it.drawableRId
-//                    )
-//                })
-//            }
-//
-//            ratesListLive.value = newRates
+            quantityWanted = sumToEvaluate
         } catch (e: Exception) {
 
         }
