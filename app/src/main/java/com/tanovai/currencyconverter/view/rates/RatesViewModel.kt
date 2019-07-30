@@ -24,16 +24,17 @@ class RatesViewModel : BaseViewModel() {
     val ratesListLive = MutableLiveData<List<RateListItem>>()
     val changeFirstItem = MutableLiveData<Boolean>()
     var fetchRatesDisposable: Disposable? = null
-    var fetchRatesDisposableOnItemClick: Disposable? = null
     var timerDisposable: Disposable? = null
-    var rateChangedDisposable: Disposable? = null
+
+    var quantityChangedDisposable: Disposable? = null
+    private val quantityEnteredPublishSubject = PublishSubject.create<String>()
+
     var isPused = AtomicBoolean(true)
     var isInInputMode = AtomicBoolean(false)
 
     var selectedBase = Constants.EURO_BASE
     var quantityWanted = 1.0
 
-    private val rateEnteredPublishSubject = PublishSubject.create<String>()
 
     val TAG = RatesViewModel::class.java.name
 
@@ -61,6 +62,7 @@ class RatesViewModel : BaseViewModel() {
         val newRateItems = mutableListOf<RateListItem>()
         newRateItems.addAll(newRates)
 
+        //Add selection if it is not already added
         if (items.isNullOrEmpty() || items[0].abb != selectedBase) {
             val findDataAboutSelected = CURRENCIES.find { it.abb == selectedBase }
             if (findDataAboutSelected != null) {
@@ -78,15 +80,15 @@ class RatesViewModel : BaseViewModel() {
             newRateItems.add(0, items[0])
         }
 
-        if(isInInputMode.get() || isPused.get()){
-            return
+        if(!isInInputMode.get() || !isPused.get()){
+            ratesListLive.value = newRateItems
+            dataLoading.value = false
         }
-        ratesListLive.value = newRateItems
-        dataLoading.value = false
     }
 
     private fun startFetchTimer() {
         timerDisposable?.dispose()
+
         if (!isPused.get() && !isInInputMode.get()) {
             timerDisposable =
                 Observable.interval(1000, TimeUnit.MILLISECONDS)
@@ -126,6 +128,7 @@ class RatesViewModel : BaseViewModel() {
                             quantityFormatted.toDouble(),
                             it.drawableRId
                         )
+
                         ratesListItems.add(item)
                     }
                 }
@@ -150,7 +153,6 @@ class RatesViewModel : BaseViewModel() {
 
     override fun onCleared() {
         fetchRatesDisposable?.dispose()
-        fetchRatesDisposableOnItemClick?.dispose()
         timerDisposable?.dispose()
         super.onCleared()
     }
@@ -210,11 +212,11 @@ class RatesViewModel : BaseViewModel() {
     }
 
     fun onSelectedFieldInputStateChanged(text: String) {
-        rateEnteredPublishSubject.onNext(text.trim())
+        quantityEnteredPublishSubject.onNext(text.trim())
     }
 
     private fun configureRateChangedListener() {
-        rateChangedDisposable = rateEnteredPublishSubject
+        quantityChangedDisposable = quantityEnteredPublishSubject
             .debounce(300, TimeUnit.MILLISECONDS)
             .distinctUntilChanged()
             .subscribeOn(Schedulers.io())
