@@ -35,24 +35,28 @@ class RatesViewModel : BaseViewModel() {
 
     private val rateEnteredPublishSubject = PublishSubject.create<String>()
 
+    val TAG = RatesViewModel::class.java.name
+
     init {
         configureRateChangedListener()
     }
 
-
-    val TAG = RatesViewModel::class.java.name
-
     fun fetchRatesListFromTimer(base: String) {
-        fetchRatesDisposable?.dispose()
-        fetchRatesDisposable = RepoRepository.getInstance().getRates(base)
-            .map { mapRatesToRateListItems(it, quantityWanted) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ whenRatesFetched(it) }, { Log.e(TAG, it.message, it) })
+        if(!isInInputMode.get() && !isPused.get()) {
+            fetchRatesDisposable?.dispose()
+            fetchRatesDisposable = RepoRepository.getInstance().getRates(base)
+                .map { mapRatesToRateListItems(it, quantityWanted) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ whenRatesFetched(it) }, { Log.e(TAG, it.message, it) })
+        }
 
     }
 
     private fun whenRatesFetched(newRates: List<RateListItem>) {
+        if(isInInputMode.get() || isPused.get()){
+            return
+        }
         val items = ratesListLive.value
         val newRateItems = mutableListOf<RateListItem>()
         newRateItems.addAll(newRates)
@@ -74,6 +78,9 @@ class RatesViewModel : BaseViewModel() {
             newRateItems.add(0, items[0])
         }
 
+        if(isInInputMode.get() || isPused.get()){
+            return
+        }
         ratesListLive.value = newRateItems
         dataLoading.value = false
     }
@@ -112,15 +119,14 @@ class RatesViewModel : BaseViewModel() {
                     if (rateDouble > 0) {
                         val quantity = BigDecimal(rateDouble).multiply(BigDecimal(quantityWanted))
                         val quantityFormatted = quantity.setScale(4, RoundingMode.HALF_UP)
-                        ratesListItems.add(
-                            RateListItem(
-                                it.abb,
-                                it.description,
-                                rateDouble,
-                                quantityFormatted.toDouble(),
-                                it.drawableRId
-                            )
+                        val item = RateListItem(
+                            it.abb,
+                            it.description,
+                            rateDouble,
+                            quantityFormatted.toDouble(),
+                            it.drawableRId
                         )
+                        ratesListItems.add(item)
                     }
                 }
             } catch (e: Exception) {
@@ -168,39 +174,32 @@ class RatesViewModel : BaseViewModel() {
 
     fun onItemClick(selectedRate: RateListItem) {
         setInputMode(true)
-        fetchRatesDisposableOnItemClick?.dispose()
-        fetchRatesDisposableOnItemClick = RepoRepository.getInstance().getRates(selectedBase)
-            .map { mapRatesToRateListItems(it, selectedRate.quantity) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ whenRatesFetchedChangeBase(it, selectedRate) }, { Log.e(TAG, it.message, it) })
-    }
 
-    private fun whenRatesFetchedChangeBase(
-        ratesListItems: List<RateListItem>?,
-        selectedRate: RateListItem
-    ) {
+        selectedBase = selectedRate.abb
+        quantityWanted = selectedRate.quantity
 
-        if (ratesListItems != null) {
-
-            selectedBase = selectedRate.abb
-            quantityWanted = selectedRate.quantity
-            val newItems = mutableListOf<RateListItem>()
-            newItems.add(
-                RateListItem(
-                    selectedRate.abb,
-                    selectedRate.description,
-                    selectedRate.rate,
-                    selectedRate.quantity,
-                    selectedRate.drawableRId,
-                    true
-                )
-            )
-
-            newItems.addAll(1, ratesListItems)
-            ratesListLive.value = newItems
-            changeFirstItem.value = true
+        val newItems = mutableListOf<RateListItem>()
+        val items = ratesListLive.value
+        if (!items.isNullOrEmpty()) {
+            newItems.addAll(items)
+            newItems.remove(selectedRate)
         }
+
+        newItems.add(
+            0,
+            RateListItem(
+                selectedRate.abb,
+                selectedRate.description,
+                selectedRate.rate,
+                selectedRate.quantity,
+                selectedRate.drawableRId,
+                true
+            )
+        )
+
+
+        ratesListLive.value = newItems
+        changeFirstItem.value = true
 
         setInputMode(false)
         startFetchTimer()
@@ -209,7 +208,6 @@ class RatesViewModel : BaseViewModel() {
     fun setInputMode(value: Boolean) {
         isInInputMode.set(value)
     }
-
 
     fun onSelectedFieldInputStateChanged(text: String) {
         rateEnteredPublishSubject.onNext(text.trim())
@@ -226,14 +224,13 @@ class RatesViewModel : BaseViewModel() {
             }, { t: Throwable? -> Log.e(TAG, t?.message) })
     }
 
-
     private fun onNewValueEntered(value: String): String {
         Log.d(TAG, value)
         try {
             val sumToEvaluate = value.toDouble()
             quantityWanted = sumToEvaluate
         } catch (e: Exception) {
-           quantityWanted = 0.0
+            quantityWanted = 0.0
         }
 
         return ""

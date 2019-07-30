@@ -28,6 +28,8 @@ class RatesActivity : AppCompatActivity() {
 
         setupAdapter(binding.viewmodel)
         setupObservers(binding.viewmodel, binding.lifecycleOwner)
+        val itemAnimator = rates_rv.getItemAnimator()
+        itemAnimator?.changeDuration = 0
 
         binding.viewmodel?.onCreate()
     }
@@ -61,7 +63,7 @@ class RatesActivity : AppCompatActivity() {
                 val listItems = viewmodel.ratesListLive.value
                 if (listItems != null) {
                     adapter.updateRatesListAll(listItems)
-                    rates_rv.smoothScrollToPosition(0)
+                    rates_rv.scrollToPosition(0)
                 }
             })
         }

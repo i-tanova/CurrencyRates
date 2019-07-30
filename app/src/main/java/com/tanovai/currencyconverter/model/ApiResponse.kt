@@ -38,5 +38,6 @@ data class Rate(
     val SGD: Double,
     val THB: Double,
     val TRY: Double,
-    val ZAR: Double
+    val ZAR: Double,
+    val EUR: Double
 )

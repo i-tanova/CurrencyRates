@@ -25,6 +25,13 @@ class RatesListAdapter(private val repoListViewModel: RatesViewModel) : Recycler
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }
 
+    init {
+        setHasStableIds(true)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return (if(repoList.size > position) repoList[position].abb.hashCode().toLong() else 0)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
